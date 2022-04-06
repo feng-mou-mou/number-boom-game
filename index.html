@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+
+    <title>猜数字游戏</title>
+    <link rel="stylesheet" href="index.css">
+  </head>
+
+  <body>
+    <h1>数字炸弹游戏</h1>
+
+    <p class="gameRules">确定玩家人数后，点击确定，游戏开始。首先系统会根据玩家人数随机生成一个自然数作为数字炸弹，并且会给出这个数字炸弹的范围，玩家们可以自己规定顺序，轮流在范围内猜（猜到数字炸弹后将会引爆），这个过程数字炸弹的范围将会一直缩小，直到有一个玩家引爆炸弹，游戏结束。该玩家将受到严峻的惩罚。</p>
+
+    <div class="form">
+      <label for="initPeople">请选择玩家人数: </label>
+      <input type="submit" value="2-4人" id="fewPeople" class="initSubmit">
+      <input type="submit" value="5人以上" id="manyPeople" class="initSubmit">
+    </div>
+
+    <div class="form">
+      <label for="guessField">请猜数: </label>
+      <input type="text" id="guessField" class="guessField">
+      <input type="submit" value="确定" class="guessSubmit">
+    </div>
+
+    <div class="resultParas">
+      <p class="Tips"></p>
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+    </div>
+
+    <script>
+        const Tips = document.querySelector('.Tips');
+        const guesses = document.querySelector('.guesses');
+        const lastResult = document.querySelector('.lastResult');
+        const lowOrHi = document.querySelector('.lowOrHi');
+
+        const guessSubmit = document.querySelector('.guessSubmit');
+        const guessField = document.querySelector('.guessField');
+
+        const fewPeople = document.querySelector('#fewPeople')
+        const manyPeople = document.querySelector('#manyPeople')
+
+        let resetButton;
+        let minimumLimit,maximumLimit,randomNumber;
+        guessField.disabled = true;
+        guessSubmit.disabled = true;
+        function initGame(playerCount) {   
+          guessField.disabled = false;
+          guessSubmit.disabled = false;    
+          let maximumNumber = 100 * playerCount;
+          randomNumber = Math.floor(Math.random() * maximumNumber) + 1;
+          if (randomNumber == 100 || randomNumber == 200) {
+            randomNumber--;
+          }
+          minimumLimit = 0;
+          maximumLimit = maximumNumber;
+          guesses.textContent = '数字炸弹的范围是：';
+          guesses.textContent += minimumLimit + ' ~ ' + maximumLimit;
+        }
+
+        function initGame1(){
+          let num = 1;
+          Tips.textContent = '玩家人数为2-4人，请在确认完顺序后开始游戏';
+          initGame(num);
+        }
+        function initGame2(){
+          let num = 2;
+          Tips.textContent = '玩家人数为5人以上，请在确认完顺序后开始游戏';
+          initGame(num);
+        }
+
+        fewPeople.addEventListener('click', initGame1);
+        manyPeople.addEventListener('click', initGame2);
+
+        function resetLimit(){
+          guesses.textContent = '数字炸弹的范围是：';
+          guesses.textContent += minimumLimit + ' ~ ' + maximumLimit;
+        }
+
+        function checkGuess() {
+          let userGuess = Number(guessField.value);
+          if (userGuess > minimumLimit && userGuess <maximumLimit) {
+            if (userGuess === randomNumber) {
+              lastResult.textContent = '!!!Boom!!! ' + userGuess + ' 为数字炸弹，你选中了数字炸弹，请接受惩罚';
+              lastResult.style.backgroundColor = 'red';
+              guesses.textContent = '';
+              setGameOver();
+            } else if(userGuess < randomNumber) {
+              lastResult.textContent = userGuess + ' 不是炸弹数字，你是安全的'
+              lastResult.style.backgroundColor = 'green';
+              minimumLimit = userGuess;
+              resetLimit();
+            } else if(userGuess > randomNumber) {
+              lastResult.textContent = userGuess + ' 不是炸弹数字，你是安全的'
+              lastResult.style.backgroundColor = 'green';
+              maximumLimit = userGuess;
+              resetLimit();
+            }
+          } else {
+            lastResult.textContent = '你猜的数字不在可选范围内，请重新选择';
+            lastResult.style.backgroundColor = 'rgb(230, 97, 8)';
+          }
+          guessField.value = '';
+          guessField.focus();
+        }
+        guessSubmit.addEventListener('click', checkGuess);
+        function setGameOver() {
+          guessField.disabled = true;
+          guessSubmit.disabled = true;
+          fewPeople.disabled = true;
+          manyPeople.disabled = true;
+          resetButton = document.createElement('button');
+          resetButton.textContent = '开始新游戏';
+          document.body.appendChild(resetButton);
+          resetButton.addEventListener('click', resetGame);
+        }
+        function resetGame() {
+          Tips.textContent = '已开始新一轮游戏，请选择玩家人数。';
+          resetButton.parentNode.removeChild(resetButton);
+
+          fewPeople.disabled = false;
+          manyPeople.disabled = false;
+          guessField.value = '';
+          guessField.focus();
+
+          lastResult.style.backgroundColor = 'white';
+        }
+    </script>
+  </body>
+</html>

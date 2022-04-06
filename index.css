@@ -1,0 +1,30 @@
+html {
+    font-family: sans-serif;
+  }
+
+  body {
+    width: 50%;
+    max-width: 800px;
+    min-width: 480px;
+    margin: 0 auto;
+  }
+
+  .lastResult {
+    color: rgb(255, 255, 255);
+    padding: 3px;
+  }
+  .form {
+    padding: 2px;
+  }
+  .initPeople {
+    width: 160px;
+    font-display: true;
+  }
+  .guesses {
+    border: 1pm solid rgba(240, 8, 163, 0.541);
+  }
+  .Tips {
+    background-color: rgb(89, 51, 224);
+    /* border: 2px solid cornflowerblue; */
+    color: rgb(236, 243, 248);
+  }
